@@ -5,8 +5,9 @@ import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PassportData } from "@/context/PassportContext"
 
-export function ShareLink({passport, onClose}:{passport: any, onClose: () => void}) {
+export function ShareLink({passport, onClose}:{passport: PassportData, onClose: () => void}) {
   const [shareLink, setShareLink] = useState("")
   const [copied, setCopied] = useState(false)
 
