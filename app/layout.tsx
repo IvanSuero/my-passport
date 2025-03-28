@@ -1,4 +1,4 @@
-import type { Metadata } from "@/node_modules/next";
+import Metadata from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
