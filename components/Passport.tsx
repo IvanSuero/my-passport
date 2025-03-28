@@ -83,8 +83,6 @@ export function Passport() {
         className={cn("relative rounded-lg overflow-hidden", passport.color)}
         style={{
           boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
-          backgroundImage: "url('/passport-texture.png')",
-          backgroundBlendMode: "multiply",
           border: "1px solid rgba(0,0,0,0.2)",
           borderRadius: "12px",
           width: currentPages.left === 0 ? "100%" : isMobile ? '100%' : passportHeight ? `${passportHeight * 1.6}px` : "160%",

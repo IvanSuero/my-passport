@@ -20,7 +20,7 @@ const DEFAULT_PASSPORT: PassportData = {
   color: 'bg-red-900',
   name: 'Mi pasaporte virtual',
   ownerName: 'Nombre',
-  stamps: [{ id: 'us-1', code: 'us', name: 'United States', date: '01/01/2021' }, { id: 'mx-1', code: 'mx', name: 'Mexico', date: '01/02/2021' }]
+  stamps: []
 }
 
 type PassportContextType = {
