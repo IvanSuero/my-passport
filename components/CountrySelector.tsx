@@ -6,30 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { CountryStamp } from "@/context/PassportContext"
-
-// Sample list of countries
-const COUNTRIES = [
-  { code: "us", name: "United States" },
-  { code: "gb", name: "United Kingdom" },
-  { code: "fr", name: "France" },
-  { code: "de", name: "Germany" },
-  { code: "it", name: "Italy" },
-  { code: "es", name: "Spain" },
-  { code: "jp", name: "Japan" },
-  { code: "cn", name: "China" },
-  { code: "au", name: "Australia" },
-  { code: "br", name: "Brazil" },
-  { code: "ca", name: "Canada" },
-  { code: "in", name: "India" },
-  { code: "mx", name: "Mexico" },
-  { code: "ru", name: "Russia" },
-  { code: "za", name: "South Africa" },
-  { code: "kr", name: "South Korea" },
-  { code: "se", name: "Sweden" },
-  { code: "ch", name: "Switzerland" },
-  { code: "th", name: "Thailand" },
-  { code: "tr", name: "Turkey" },
-]
+import { usePassport } from "@/context/PassportContext"
+import COUNTRIES from "@/data/countries.json"
 
 interface CountrySelectorProps {
   onSelect: (stamp: CountryStamp) => void
@@ -37,9 +15,10 @@ interface CountrySelectorProps {
 }
 
 export function CountrySelector({ onSelect, onCancel }: CountrySelectorProps) {
+  const { passport } = usePassport()
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredCountries = COUNTRIES.filter((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredCountries = COUNTRIES.filter((country) => !passport.stamps.map((stamp) => stamp.code).includes(country.code)).filter((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const handleSelectCountry = (code: string, name: string) => {
     const newStamp: CountryStamp = {
@@ -55,13 +34,13 @@ export function CountrySelector({ onSelect, onCancel }: CountrySelectorProps) {
     <Dialog open={true} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Country Stamp</DialogTitle>
+          <DialogTitle>Sellar pasaporte</DialogTitle>
         </DialogHeader>
 
         <div className="relative mb-4">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search countries..."
+            placeholder="Buscar paises..."
             className="pl-8"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -70,7 +49,7 @@ export function CountrySelector({ onSelect, onCancel }: CountrySelectorProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-1 top-1 h-7 w-7"
+              className="absolute right-1 top-1 h-7 w-7 hover:cursor-pointer"
               onClick={() => setSearchTerm("")}
             >
               <X className="h-4 w-4" />
@@ -93,7 +72,7 @@ export function CountrySelector({ onSelect, onCancel }: CountrySelectorProps) {
             ))}
           </div>
 
-          {filteredCountries.length === 0 && <div className="text-center py-4 text-gray-500">No countries found</div>}
+          {filteredCountries.length === 0 && <div className="text-center py-4 text-gray-500">No hay paises</div>}
         </div>
       </DialogContent>
     </Dialog>

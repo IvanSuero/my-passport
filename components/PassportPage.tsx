@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MapPinIcon as MapPinPlus } from "lucide-react"
+import { MapPinIcon as MapPinPlus, XIcon } from "lucide-react"
 import { CountrySelector } from "@/components/CountrySelector"
 import { usePassport } from "@/context/PassportContext"
 import type { CountryStamp } from "@/context/PassportContext"
+import COUNTRIES from "@/data/countries.json"
 
 export function PassportPage({ pageNumber }: { pageNumber: number }) {
   const { passport, setPassport } = usePassport()
@@ -14,6 +15,10 @@ export function PassportPage({ pageNumber }: { pageNumber: number }) {
   const startIndex = (pageNumber - 1) * stampsPerPage
   const endIndex = startIndex + stampsPerPage
   const pageStamps = passport.stamps.slice(startIndex, endIndex)
+  const lastPage = Math.max(1, Math.ceil(passport.stamps.length % stampsPerPage !== 0 ? passport.stamps.length / stampsPerPage : passport.stamps.length / stampsPerPage + 1))
+  const showSeal = (pageNumber - lastPage === 1 && pageNumber-1 !== lastPage) || (pageStamps.length < stampsPerPage && pageNumber === lastPage)
+  
+  if (pageNumber === 0) return null
 
   const addStamp = (stamp: CountryStamp) => {
     setPassport({
@@ -23,30 +28,41 @@ export function PassportPage({ pageNumber }: { pageNumber: number }) {
     setShowCountrySelector(false)
   }
 
+  const deleteStamp = (stamp: CountryStamp) => {
+    setPassport({
+      ...passport,
+      stamps: passport.stamps.filter((s) => s.id !== stamp.id),
+    })
+  }
+
   return (
     <div className="relative w-full h-full p-6 bg-amber-50">
 
       <div className="flex flex-col h-full justify-start gap-4 pt-8">
         {pageStamps.map((stamp) => (
           <div key={stamp.id} className="relative mx-auto w-[80%] h-[20%] flex items-center justify-center mb-2">
+            <button className="absolute z-10 top-0 right-4 text-black hover:text-gray-600 hover:cursor-pointer" onClick={() => deleteStamp(stamp)}>
+              <XIcon className="w-4 h-4" />
+            </button>
             <div
-              className="absolute inset-0 opacity-70 rotate-[-6deg]"
+              className="absolute inset-0 opacity-75 rotate-[-6deg]"
               style={{
-                backgroundImage: `url('/countries/${stamp.code.toLowerCase()}.png')`,
+                backgroundImage: `url(${COUNTRIES.find((c) => c.code === stamp.code)?.image})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                filter: "grayscale(30%)",
-                borderRadius: "8px",
-                border: "1px solid rgba(0,0,0,0.1)",
+                filter: "grayscale(70%) sepia(30%) contrast(85%)",
+                borderRadius: "4px",
+                border: "1px solid rgba(0,0,0,0.2)",
+                boxShadow: "2px 2px 6px rgba(0,0,0,0.4)",
               }}
             />
-            <div className="relative z-10 bg-white/80 backdrop-blur-sm rounded-md p-3 shadow-sm border border-gray-300 transform rotate-[2deg] w-[50%] h-[75%]">
-              <div className="flex flex-col items-center">
-                <div className="text-2xl mb-1">{getCountryFlag(stamp.code)}</div>
-                <div className="text-sm font-semibold uppercase tracking-wider">{stamp.name}</div>
-                <div className="absolute inset-0 border-2 border-red-800/40 rounded-md border-dashed"></div>
-                <div className="absolute top-[-10px] right-[-10px] w-14 h-14 rounded-full border-2 border-red-800/40 flex items-center justify-center transform rotate-[15deg]">
-                  <span className="text-xs text-red-800/70 font-extrabold">VISITED</span>
+            <div className="relative z-10 bg-white/80 backdrop-blur-sm rounded-md p-3 shadow-md transform rotate-[2deg] w-[50%] h-[75%]" style={{boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.3), 2px 2px 5px rgba(0, 0, 0, 0.4)"}}>
+              <div className="flex flex-col items-center text-gray-800">
+                <div className="text-2xl sm:mb-1 mb-0 opacity-70">{getCountryFlag(stamp.code)}</div>
+                <div className="text-sm hidden sm:flex font-semibold uppercase tracking-wider text-black/60">{stamp.name}</div>
+                <div className="absolute inset-0 border-2 border-gray-700/60 rounded-md border-dashed"></div>
+                <div className="absolute top-[-12px] right-[-12px] w-14 h-14 rounded-full border-2 border-green-700/90 border-dashed flex items-center justify-center transform rotate-[8deg] bg-gray-200 shadow-inner">
+                  <span className="text-xs text-green-700/90 font-extrabold">VISITED</span>
                 </div>
               </div>
             </div>
@@ -54,7 +70,7 @@ export function PassportPage({ pageNumber }: { pageNumber: number }) {
         ))}
 
         {/* Botón para añadir sello - solo mostrar si hay espacio en la página o es la última página */}
-        {pageStamps.length < stampsPerPage && (
+        {showSeal  && (
           <div className="relative mx-auto w-[80%] h-[10%] flex items-center justify-center mt-4">
             <Button
               variant="outline"

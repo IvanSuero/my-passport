@@ -42,17 +42,17 @@ export function PassportSettings({ currentSettings, onCancel }: PassportSettings
     <Dialog open={true} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Passport Settings</DialogTitle>
+          <DialogTitle>Ajustes</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Passport Title</Label>
+            <Label htmlFor="name">Titulo</Label>
             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="PASSPORT" />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="ownerName">Owner Name</Label>
+            <Label htmlFor="ownerName">Nombre</Label>
             <Input
               id="ownerName"
               value={ownerName}
@@ -62,14 +62,14 @@ export function PassportSettings({ currentSettings, onCancel }: PassportSettings
           </div>
 
           <div className="grid gap-2">
-            <Label>Passport Color</Label>
+            <Label>Color de portada</Label>
             <div className="grid grid-cols-3 gap-2">
               {PASSPORT_COLORS.map((passportColor) => (
                 <Button
                   key={passportColor.value}
                   type="button"
                   variant="outline"
-                  className={`h-12 ${passportColor.value} ${color === passportColor.value ? "ring-2 ring-offset-2 ring-primary" : ""}`}
+                  className={`h-12 hover:cursor-pointer ${passportColor.value} ${color === passportColor.value ? "ring-2 ring-offset-2 ring-primary" : ""}`}
                   onClick={() => setColor(passportColor.value)}
                 >
                   <span className="sr-only">{passportColor.name}</span>
@@ -80,10 +80,10 @@ export function PassportSettings({ currentSettings, onCancel }: PassportSettings
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
+          <Button variant="outline" onClick={onCancel} className="hover:cursor-pointer">
+            Cancelar
           </Button>
-          <Button onClick={handleSave}>Save Changes</Button>
+          <Button onClick={handleSave} className="hover:cursor-pointer">Guardar cambios</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
