@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Mi pasaporte virtual",
   description: "Mi pasaporte virtual",
+  icons: {
+    icon: "/favicon.ico",
+  }
 };
 
 export default function RootLayout({
