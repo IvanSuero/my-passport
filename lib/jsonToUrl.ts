@@ -1,4 +1,4 @@
-export async function jsonToUrl({jsonData, baseUrl = "http://localhost:3000/"}: {jsonData: Object, baseUrl?: string}): Promise<string> {
+export async function jsonToUrl({jsonData, baseUrl = "http://localhost:3000/"}: {jsonData: object, baseUrl?: string}): Promise<string> {
   const jsonString = JSON.stringify(jsonData, Object.keys(jsonData).sort())
 
   const base64 = btoa(jsonString).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); // URL-safe Base64
